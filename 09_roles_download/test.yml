@@ -1,0 +1,5 @@
+---
+- name: demoweb
+  hosts: all
+  roles:
+    - kshweb 

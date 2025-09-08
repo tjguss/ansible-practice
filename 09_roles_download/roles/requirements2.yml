@@ -1,0 +1,5 @@
+# From a webserver, where the role is packaged in a gzipped tar achive
+- name: demoweb2
+  src: https://ansible.example.com/demoweb.tgz
+- name: rollbacksvc2
+  src: https://ansible.example.com/rollback.tgz

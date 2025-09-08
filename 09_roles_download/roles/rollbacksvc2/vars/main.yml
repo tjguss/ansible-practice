@@ -1,0 +1,18 @@
+---
+# vars file for roles/rollbacksvc
+fw_rules:
+  - http
+  - https
+
+svcs:
+  - httpd
+  - firewalld
+
+web_files:
+  - /etc/httpd/conf.d/vhost.conf
+  - /var/www/html/index.html
+  - /var/www/vhosts
+
+web_pkg:
+  - httpd
+  - mod_ssl

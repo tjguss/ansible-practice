@@ -1,0 +1,6 @@
+---
+# handlers file for roles/rollbask.svc
+- name: reload firewalld
+  ansible.builtin.systemd:
+    name: firewalld
+    state: reload

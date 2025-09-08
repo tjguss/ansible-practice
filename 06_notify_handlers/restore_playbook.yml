@@ -1,0 +1,19 @@
+---
+- name: Restore playbook.yml
+  hosts: all
+  vars:
+    pkg_db:
+      - mariadb-server
+      - python3-PyMySQL
+    svc_db: mariadb
+  tasks:
+    - name: 1) DB 서비스 종료
+      ansible.builtin.systemd:
+        name: "{{ svc_db }}"
+        state: stopped
+        enabled: false
+
+    - name: 2) DB 패키지 삭제
+      ansible.builtin.dnf:
+        name: "{{ pkg_db }}"
+        state: absent

@@ -1,0 +1,22 @@
+---
+# tasks file for roles/myfirewall
+# >>> fw_80, fw_443
+- name: 패키지 설치
+  ansible.builtin.dnf:
+    name: firewalld
+    state: present
+
+- name: 서비스 기동 - firewalld
+  ansible.builtin.systemd:
+    name: firewalld
+    state: started
+    enabled: true
+
+- name: 방화벽 포트 - {{ fw_80 }}, {{ fw_443 }}
+  ansible.posix.firewalld:
+    service: "{{ item }}"
+    permanent: true
+    immediate: true
+    state: enabled
+  loop: "{{ ports }}"
+

@@ -1,0 +1,24 @@
+---
+- name: Restore Playbook.yml
+  hosts: all
+  vars: 
+    packages:
+      - mariadb
+      - mariadb-server
+      - python3-PyMySQL
+    service: mariadb.service
+  tasks:
+    - name: 1) 서비스 종료 - mariadb
+      ansible.builtin.systemd:
+        name: "{{ service }}"
+        state: stooped
+        enabled: false
+      ignore_errors: true
+
+    - name: 2) 패키지 삭제
+      ansible.builtin.dnf:
+        name: "{{ packages }}"
+        state: absent
+      when: ansible_distribution == "CentOS"
+      
+

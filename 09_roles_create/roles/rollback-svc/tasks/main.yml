@@ -1,0 +1,46 @@
+---
+# tasks file for roles/rollack-svc
+############################################
+# 방화벽 포트 제거
+# 서비스 종료
+# 서비스 설정 삭제
+# 패키지 삭제
+############################################
+- name: 방화벽 포트 제거
+  ansible.posix.firewalld:
+    service: "{{ item }}"
+    permanent: true
+    immediate: true
+    state: disabled
+  loop: "{{ fw_svc }}"
+  when: fw_svc is defined and fw_svc | length > 0
+  ignore_errors: true
+
+- name: 서비스 종료
+  ansible.builtin.systemd:
+    name: "{{ item }}"
+    state: stopped
+    enabled: false
+  loop: "{{ svcs }}"
+  when: svcs is defined and svcs | length > 0
+
+- name: 파일 존재 여부 확인
+  ansible.builtin.stat:
+    path: "{{ item }}"
+  register: file_check
+  loop: "{{ files }}"
+
+- name: 서비스 설정 삭제
+  ansible.builtin.file:
+    path: "{{ item.item }}"
+    state: absent
+  loop: "{{ file_check.results }}"
+  when: item.stat.exists
+  loop_control:
+    label: "{{ item.item }}"
+
+- name: 패키지 삭제
+  ansible.builtin.dnf:
+    name: "{{ pkgs }}"
+    state: absent
+  when: pkgs is defined and pkgs | length > 0
